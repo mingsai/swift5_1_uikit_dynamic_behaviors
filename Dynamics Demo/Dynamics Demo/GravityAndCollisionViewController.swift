@@ -22,7 +22,7 @@ class GravityAndCollisionViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         squareView = UIView(frame: CGRect(x: 100, y: 100, width: 100, height: 100))
-        squareView.backgroundColor = UIColor.blueColor()
+        squareView.backgroundColor = UIColor.blue
         view.addSubview(squareView)
         
         animator = UIDynamicAnimator(referenceView: view)

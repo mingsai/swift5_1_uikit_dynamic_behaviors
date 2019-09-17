@@ -32,7 +32,7 @@ class ExampleApplicationViewController: UIViewController {
     func createOverlay() {
         // Create a gray view and set its alpha to 0 so it isn't visible
         overlayView = UIView(frame: view.bounds)
-        overlayView.backgroundColor = UIColor.grayColor()
+        overlayView.backgroundColor = UIColor.gray
         overlayView.alpha = 0.0
         view.addSubview(overlayView)
     }
@@ -41,23 +41,23 @@ class ExampleApplicationViewController: UIViewController {
         // Here the red alert view is created. It is created with rounded corners and given a shadow around it
         let alertWidth: CGFloat = 250
         let alertHeight: CGFloat = 150
-        let alertViewFrame: CGRect = CGRectMake(0, 0, alertWidth, alertHeight)
+        let alertViewFrame: CGRect = CGRect(x:0, y:0, width:alertWidth, height: alertHeight)
         alertView = UIView(frame: alertViewFrame)
-        alertView.backgroundColor = UIColor.redColor()
+        alertView.backgroundColor = UIColor.red
         alertView.alpha = 0.0
         alertView.layer.cornerRadius = 10;
-        alertView.layer.shadowColor = UIColor.blackColor().CGColor;
-        alertView.layer.shadowOffset = CGSizeMake(0, 5);
+        alertView.layer.shadowColor = UIColor.black.cgColor;
+        alertView.layer.shadowOffset = CGSize(width: 0, height: 5);
         alertView.layer.shadowOpacity = 0.3;
         alertView.layer.shadowRadius = 10.0;
         
         // Create a button and set a listener on it for when it is tapped. Then the button is added to the alert view
-        let button = UIButton.buttonWithType(UIButtonType.System) as UIButton
-        button.setTitle("Dismiss", forState: UIControlState.Normal)
-        button.backgroundColor = UIColor.whiteColor()
-        button.frame = CGRectMake(0, 0, alertWidth, 40.0)
+        let button = UIButton(type: UIButton.ButtonType.system) as UIButton
+        button.setTitle("Dismiss", for: UIControl.State.normal)
+        button.backgroundColor = UIColor.white
+        button.frame = CGRect(x:0, y:0, width:alertWidth, height:40.0)
         
-        button.addTarget(self, action: Selector("dismissAlert"), forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: #selector(dismissAlert), for: UIControl.Event.touchUpInside)
         
         alertView.addSubview(button)
         view.addSubview(alertView)
@@ -80,28 +80,28 @@ class ExampleApplicationViewController: UIViewController {
         animator.removeAllBehaviors()
         
         // Animate in the overlay
-        UIView.animateWithDuration(0.4) {
+        UIView.animate(withDuration: 0.4) {
             self.overlayView.alpha = 1.0
         }
         
         // Animate the alert view using UIKit Dynamics.
         alertView.alpha = 1.0
         
-        var snapBehaviour: UISnapBehavior = UISnapBehavior(item: alertView, snapToPoint: view.center)
+        let snapBehaviour: UISnapBehavior = UISnapBehavior(item: alertView, snapTo: view.center)
         animator.addBehavior(snapBehaviour)
     }
     
-    func dismissAlert() {
+    @objc func dismissAlert() {
         
         animator.removeAllBehaviors()
         
-        var gravityBehaviour: UIGravityBehavior = UIGravityBehavior(items: [alertView])
-        gravityBehaviour.gravityDirection = CGVectorMake(0.0, 10.0);
+        let gravityBehaviour: UIGravityBehavior = UIGravityBehavior(items: [alertView])
+        gravityBehaviour.gravityDirection = CGVector(dx:0.0, dy: 10.0);
         animator.addBehavior(gravityBehaviour)
         
         // This behaviour is included so that the alert view tilts when it falls, otherwise it will go straight down
-        var itemBehaviour: UIDynamicItemBehavior = UIDynamicItemBehavior(items: [alertView])
-        itemBehaviour.addAngularVelocity(CGFloat(-M_PI_2), forItem: alertView)
+        let itemBehaviour: UIDynamicItemBehavior = UIDynamicItemBehavior(items: [alertView])
+        itemBehaviour.addAngularVelocity(CGFloat(-.pi / 2.0), for: alertView)
         animator.addBehavior(itemBehaviour)
         
         // Animate out the overlay, remove the alert view from its superview and set it to nil
@@ -110,7 +110,7 @@ class ExampleApplicationViewController: UIViewController {
         // And the more it 'falls' off the screen, the longer it takes to come back into view, so when the Show Alert button
         // is tapped again after a considerable time passes, the app seems unresponsive for a bit of time as the alert view
         // comes back up to the screen
-        UIView.animateWithDuration(0.4, animations: {
+        UIView.animate(withDuration: 0.4, animations: {
             self.overlayView.alpha = 0.0
         }, completion: {
             (value: Bool) in
@@ -120,12 +120,12 @@ class ExampleApplicationViewController: UIViewController {
         
     }
     
-    @IBAction func showAlertView(sender: UIButton) {
+    @IBAction func showAlertView(_ sender: UIButton) {
         showAlert()
     }
     
     func createGestureRecognizer() {
-        let panGestureRecognizer: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: Selector("handlePan:"))
+        let panGestureRecognizer: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: Selector(("handlePan:")))
         view.addGestureRecognizer(panGestureRecognizer)
     }
     
@@ -139,30 +139,30 @@ class ExampleApplicationViewController: UIViewController {
     // When the user drags the view too far down, we dismiss the view
     // I check whether the alert view is not nil before taking action. This ensures that when the user dismisses the alert view
     // and drags on the screen, the app will not crash as it tries to move a view that hasn't been initialized.
-    func handlePan(sender: UIPanGestureRecognizer) {
+    func handlePan(_ sender: UIPanGestureRecognizer) {
         
         if (alertView != nil) {
-            let panLocationInView = sender.locationInView(view)
-            let panLocationInAlertView = sender.locationInView(alertView)
+            let panLocationInView = sender.location(in: view)
+            let panLocationInAlertView = sender.location(in: alertView)
             
-            if sender.state == UIGestureRecognizerState.Began {
+            if sender.state == UIGestureRecognizer.State.began {
                 animator.removeAllBehaviors()
                 
-                let offset = UIOffsetMake(panLocationInAlertView.x - CGRectGetMidX(alertView.bounds), panLocationInAlertView.y - CGRectGetMidY(alertView.bounds));
+                let offset = UIOffset(horizontal: panLocationInAlertView.x - alertView.bounds.midX, vertical: panLocationInAlertView.y - alertView.bounds.midY);
                 attachmentBehavior = UIAttachmentBehavior(item: alertView, offsetFromCenter: offset, attachedToAnchor: panLocationInView)
                 
                 animator.addBehavior(attachmentBehavior)
             }
-            else if sender.state == UIGestureRecognizerState.Changed {
+            else if sender.state == UIGestureRecognizer.State.changed {
                 attachmentBehavior.anchorPoint = panLocationInView
             }
-            else if sender.state == UIGestureRecognizerState.Ended {
+            else if sender.state == UIGestureRecognizer.State.ended {
                 animator.removeAllBehaviors()
                 
-                snapBehavior = UISnapBehavior(item: alertView, snapToPoint: view.center)
+                snapBehavior = UISnapBehavior(item: alertView, snapTo: view.center)
                 animator.addBehavior(snapBehavior)
                 
-                if sender.translationInView(view).y > 100 {
+                if sender.translation(in: view).y > 100 {
                     dismissAlert()
                 }
             }

@@ -14,15 +14,15 @@ class SnapViewController: UIViewController {
     var snap: UISnapBehavior!
     var animator: UIDynamicAnimator!
     
-    @IBAction func handleTap(sender: UITapGestureRecognizer) {
+    @IBAction func handleTap(_ sender: UITapGestureRecognizer) {
         
-        let tapPoint: CGPoint = sender.locationInView(view)
+        let tapPoint: CGPoint = sender.location(in: view)
         
         if (snap != nil) {
             animator.removeBehavior(snap)
         }
         
-        snap = UISnapBehavior(item: squareView, snapToPoint: tapPoint)
+        snap = UISnapBehavior(item: squareView, snapTo: tapPoint)
         animator.addBehavior(snap)
         
     }
@@ -33,7 +33,7 @@ class SnapViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         squareView = UIView(frame: CGRect(x: 100, y: 100, width: 100, height: 100))
-        squareView.backgroundColor = UIColor.blueColor()
+        squareView.backgroundColor = UIColor.blue
         view.addSubview(squareView)
         
         animator = UIDynamicAnimator(referenceView: view)

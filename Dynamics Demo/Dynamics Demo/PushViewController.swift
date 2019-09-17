@@ -20,18 +20,18 @@ class PushViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         redSquareView = UIView(frame: CGRect(x: 40, y: 100, width: 50, height: 50))
-        redSquareView.backgroundColor = UIColor.redColor()
+        redSquareView.backgroundColor = UIColor.red
         view.addSubview(redSquareView)
         
         blueSquareView = UIView(frame: CGRect(x: 220, y: 100, width: 50, height: 50))
-        blueSquareView.backgroundColor = UIColor.blueColor()
+        blueSquareView.backgroundColor = UIColor.blue
         view.addSubview(blueSquareView)
         
-        let continuousPush: UIPushBehavior = UIPushBehavior(items: [redSquareView], mode: UIPushBehaviorMode.Continuous)
-        let instantaneousPush: UIPushBehavior = UIPushBehavior(items: [blueSquareView], mode: UIPushBehaviorMode.Instantaneous)
+        let continuousPush: UIPushBehavior = UIPushBehavior(items: [redSquareView], mode: UIPushBehavior.Mode.continuous)
+        let instantaneousPush: UIPushBehavior = UIPushBehavior(items: [blueSquareView], mode: UIPushBehavior.Mode.instantaneous)
         
-        continuousPush.setAngle( CGFloat(M_PI_2) , magnitude: 0.3);
-        instantaneousPush.setAngle( CGFloat(M_PI_2) , magnitude: 0.3);
+        continuousPush.setAngle( CGFloat(.pi / 2.0) , magnitude: 0.3);
+        instantaneousPush.setAngle( CGFloat(.pi / 2.0) , magnitude: 0.3);
         
         animator = UIDynamicAnimator(referenceView: view)
         animator.addBehavior(continuousPush)
